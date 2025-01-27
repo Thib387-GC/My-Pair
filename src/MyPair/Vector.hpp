@@ -3,82 +3,99 @@
 
 template<typename T>
 class Vector {
-	Iterator<T>* It;
+    Iterator<T>* It; 
+    int size;        
+
 public:
-	 Vector();
+    Vector();
+    ~Vector();
 
-	void pushBack(T value);
-
-	T operator[](int j);
-
-	int Size();
-	
-	Iterator<T> Begin();
+    void pushBack(T value);
+    T operator[](int index);
+    int Size();
+    Iterator<T> Begin();
+    Iterator<T> end();
 };
 
 template<typename T>
-Vector<T>::Vector(){
-	It = new Iterator<T>();
-	It->Current = new Node<T>();
-	It->Current->Prev = nullptr;
-	It->Current->Next = nullptr;
-
-
+Vector<T>::Vector() : It(new Iterator<T>()), size(0) {
+    It->Current = nullptr; 
 }
+
 template<typename T>
-void Vector<T>::pushBack(T value) {
-	while(It->Current->Next != nullptr) {
-		It->operator++();
-	}
+Vector<T>::~Vector() {
+    while (It->Current && It->Current->Prev) {
+        It->operator--();
+    }
 
+    while (It->Current) {
+        Node<T>* temp = It->Current->Next;
+        delete It->Current;
+        It->Current = temp;
+    }
 
-	Node<T>* tempNode = new Node<T>();
-	tempNode->Prev = It->Current;
-	tempNode->Value = value;
-	tempNode->Next = nullptr;
-	It->Current->Next =tempNode;
+    delete It;
 }
 
 template<typename T>
-inline T Vector<T>::operator[](int j)
-{
-	if (j < Size())
-	{
-		Begin();
-		for (int i = 0; i <= j; i++)
-		{
-			It->operator++();
+void Vector<T>::pushBack(T value) {
+    if (size == 0) {
+        It->Current = new Node<T>();
+        It->Current->Value = value;
+        It->Current->Prev = nullptr;
+        It->Current->Next = nullptr;
+    }
+    else {
+        while (It->Current->Next != nullptr) {
+            It->operator++();
+        }
 
-		}
-		
-	}
-	return It->Current->Value;
+        Node<T>* newNode = new Node<T>();
+        newNode->Value = value;
+        newNode->Prev = It->Current;
+        newNode->Next = nullptr;
+
+        It->Current->Next = newNode;
+        It->operator++();
+    }
+
+    size++;
 }
 
 template<typename T>
-inline int Vector<T>::Size()
-{
-	Begin();
-	int it=0;
+T Vector<T>::operator[](int index) {
+    if (index < 0 || index >= size) {
+        std::cout << " \033[31mIndex out of range\033[0m";
+    }
 
-	while (It->Current->Next != nullptr)
-	{
-		It->operator++();
-		it++;
-	}
-	return it;
+   
+    Begin();
+
+    for (int i = 0; i < index; i++) {
+        It->operator++();
+    }
+
+    return It->Current->Value; 
 }
 
 template<typename T>
-inline Iterator<T> Vector<T>::Begin()
-{
-	while (It->Current->Prev != nullptr)
-	{
-		It->operator--();
-	}
-	return *It;
-
+int Vector<T>::Size() {
+    return size;
 }
 
+template<typename T>
+Iterator<T> Vector<T>::Begin() {
+    while (It->Current && It->Current->Prev != nullptr) {
+        It->operator--();
+    }
 
+    return *It;
+}
+template<typename T>
+Iterator<T> Vector<T>::end() {
+    while (It->Current && It->Current->Next != nullptr) {
+        It->operator++();
+    }
 
+    return *It;
+}

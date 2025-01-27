@@ -11,13 +11,18 @@ int main()
 
 
 
-	Vector<int>* yopVect = new Vector<int>;
+	Vector<int> yopVect ;
 
-	yopVect->pushBack(70);
-	std::cout << yopVect->Size() << "\n";
-	std::cout << yopVect->Size() << "\n";
+	yopVect.pushBack(70);
+	std::cout << yopVect.Size() << "\n";
 
-	std::cout << yopVect[0] << " " << yopVect[1];
+	yopVect.pushBack(400);
+
+	std::cout << yopVect.Size() << "\n";
+	yopVect.pushBack(450);
+	std::cout << yopVect.Size() << "\n";
+
+	std::cout << yopVect[0]<< " " << yopVect[1] << " "<< yopVect[2] << yopVect[3];
 
 	return 0;
 }
