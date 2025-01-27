@@ -17,7 +17,7 @@ int main()
 	std::cout << yopVect->Size() << "\n";
 	std::cout << yopVect->Size() << "\n";
 
-	std::cout << yopVect[0]& << " " << yopVect[1]&;
+	std::cout << yopVect[0] << " " << yopVect[1];
 
 	return 0;
 }
